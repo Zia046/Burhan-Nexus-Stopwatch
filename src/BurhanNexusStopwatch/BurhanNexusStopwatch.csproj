@@ -28,6 +28,7 @@
   <ItemGroup>
     <Resource Include="Assets\AppIcon.ico" />
     <Resource Include="Assets\Logo.png" />
+    <Resource Include="Assets\BurhanNexusLogo.jpg" />
   </ItemGroup>
 
 </Project>

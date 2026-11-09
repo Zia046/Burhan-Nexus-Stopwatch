@@ -80,7 +80,7 @@ src/BurhanNexusStopwatch/
 ├── Services/NativeMethods.cs         # Native always-on-top (HWND_TOPMOST)
 ├── Themes/                           # Classic LCD, Dark, Light + shared styles
 ├── Views/                            # Settings and About dialogs
-├── Models/AppInfo.cs                 # ← Edit your mobile number and email here
+├── Models/AppInfo.cs                 # Branding and official contact details
 └── MainWindow.xaml                   # Main stopwatch window
 ```
 
@@ -113,9 +113,8 @@ Our mission is to create smart, reliable, and user-friendly software solutions t
 ## 📩 Contact
 
 - **Brand:** Burhan Nexus
-- **Mobile:** [Your Mobile Number]
-- **Email:** [Your Email Address]
-- **Website:** [Your Website]
+- **Mobile:** +923475093446
+- **Email:** ziaullah.046@gmail.com
 
 ---
 
