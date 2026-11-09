@@ -45,6 +45,7 @@ public partial class MainWindow : Window
         ApplySettings();
         UpdateStopwatchDisplay();
         UpdateControls();
+        InitializeCountdown();
     }
 
     // ---------------------------------------------------------------- Stopwatch
@@ -89,7 +90,8 @@ public partial class MainWindow : Window
         PauseButton.IsEnabled = running;
         ResetButton.IsEnabled = !zero;
 
-        StatusText.Text = running ? "RUN" : zero ? "READY" : "PAUSE";
+        if (CurrentMode == AppMode.Stopwatch)
+            StatusText.Text = running ? "RUN" : zero ? "READY" : "PAUSE";
     }
 
     // ---------------------------------------------------------------- Clock
@@ -147,6 +149,7 @@ public partial class MainWindow : Window
         else _clockTimer.Stop();
 
         UpdateStopwatchDisplay();
+        if (_uiReady) ApplyMode(); // keeps the TIME'S UP layout if the alarm is ringing
     }
 
     private void SettingsButton_Click(object sender, RoutedEventArgs e)
@@ -263,6 +266,7 @@ public partial class MainWindow : Window
     {
         _displayTimer.Stop();
         _clockTimer.Stop();
+        ShutdownCountdown();
         SaveSettings();
     }
 }

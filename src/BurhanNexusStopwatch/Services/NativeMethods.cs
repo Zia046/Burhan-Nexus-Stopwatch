@@ -55,4 +55,38 @@ internal static class NativeMethods
         SetWindowPos(hwnd, topMost ? HWND_TOPMOST : HWND_NOTOPMOST, 0, 0, 0, 0,
             SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
     }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct FLASHWINFO
+    {
+        public uint cbSize;
+        public IntPtr hwnd;
+        public uint dwFlags;
+        public uint uCount;
+        public uint dwTimeout;
+    }
+
+    private const uint FLASHW_ALL = 0x3;
+    private const uint FLASHW_TIMERNOFG = 0xC;
+    private const uint FLASHW_STOP = 0;
+
+    [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool FlashWindowEx(ref FLASHWINFO info);
+
+    /// <summary>Flashes the taskbar button until the window comes to the foreground (or stops it).</summary>
+    public static void FlashTaskbar(Window window, bool flash)
+    {
+        var hwnd = new WindowInteropHelper(window).Handle;
+        if (hwnd == IntPtr.Zero) return;
+        var info = new FLASHWINFO
+        {
+            cbSize = (uint)Marshal.SizeOf<FLASHWINFO>(),
+            hwnd = hwnd,
+            dwFlags = flash ? FLASHW_ALL | FLASHW_TIMERNOFG : FLASHW_STOP,
+            uCount = uint.MaxValue,
+            dwTimeout = 0
+        };
+        FlashWindowEx(ref info);
+    }
 }

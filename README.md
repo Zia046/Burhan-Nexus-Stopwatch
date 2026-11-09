@@ -14,6 +14,7 @@ Designed for simplicity, accuracy, and everyday productivity.
 - **Live Clock & Date:** Displays current system time, date, and day.
 - **Accurate Stopwatch:** High-precision time measurement.
 - **Three Simple Controls:** Start, Pause, and Reset.
+- **Countdown Timer with Alarm:** Quick presets (1, 2, 3, 4, 5, 10, 15, 30, 60 minutes) or any custom time up to 99:59:59. When it reaches 00:00:00 a loud digital alarm rings until you press **Stop Alarm**, with a blinking "TIME'S UP!" display — even if the window was minimized.
 - **Resizable Window:** Freely resize the application using your mouse.
 - **Always on Top:** Keep the stopwatch visible above other windows.
 - **Compact Design:** Small desktop-friendly interface.
@@ -79,11 +80,13 @@ Every push is also built automatically by GitHub Actions (see the **Actions** ta
 src/BurhanNexusStopwatch/
 ├── Controls/SevenSegmentDisplay.cs   # Casio-style LCD digits (vector, no font file)
 ├── Services/StopwatchEngine.cs       # Timing via System.Diagnostics.Stopwatch
+├── Services/CountdownEngine.cs       # Countdown timer (same high-resolution clock)
+├── Services/AlarmPlayer.cs           # Looping alarm sound (generated in memory)
 ├── Services/SettingsService.cs       # Settings saved to %AppData%\BurhanNexus\Stopwatch
 ├── Services/StartupService.cs        # "Start with Windows"
 ├── Services/NativeMethods.cs         # Native always-on-top (HWND_TOPMOST)
 ├── Themes/                           # Classic LCD, Dark, Light + shared styles
-├── Views/                            # Settings and About dialogs
+├── Views/                            # Settings, About, and Set Timer dialogs
 ├── Models/AppInfo.cs                 # Branding and official contact details
 └── MainWindow.xaml                   # Main stopwatch window
 ```
@@ -97,6 +100,11 @@ src/BurhanNexusStopwatch/
 | START    | Start or resume stopwatch             |
 | PAUSE    | Pause stopwatch                       |
 | RESET    | Reset stopwatch to zero               |
+| STOPWATCH / TIMER | Switch between the stopwatch and the countdown timer |
+| SET (Timer) | Choose a preset or custom countdown time |
+| START / PAUSE / RESUME (Timer) | Run, pause, or continue the countdown |
+| RESET (Timer) | Stop and return to the set time |
+| STOP ALARM | Silence the alarm when time is up |
 | Settings | Customize application preferences     |
 | About    | View software and developer information |
 

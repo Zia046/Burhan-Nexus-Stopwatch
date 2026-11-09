@@ -4,8 +4,8 @@
         xmlns:controls="clr-namespace:BurhanNexusStopwatch.Controls"
         Title="Burhan Nexus Stopwatch"
         Icon="Assets/AppIcon.ico"
-        Width="288" Height="196"
-        MinWidth="236" MinHeight="176"
+        Width="300" Height="200"
+        MinWidth="272" MinHeight="180"
         WindowStyle="SingleBorderWindow"
         ResizeMode="CanResize"
         Background="{DynamicResource CaseBrush}"
@@ -79,14 +79,26 @@
                     </Button>
                 </StackPanel>
 
-                <TextBlock x:Name="PinIndicator" Text="&#xE718;" FontFamily="{StaticResource IconFont}" FontSize="10"
-                           Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Right"
-                           VerticalAlignment="Center" ToolTip="Pinned on top of other windows"
-                           Visibility="Collapsed" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <TextBlock x:Name="PinIndicator" Text="&#xE718;" FontFamily="{StaticResource IconFont}" FontSize="10"
+                               Foreground="{DynamicResource AccentBrush}" VerticalAlignment="Center" Margin="0,0,6,0"
+                               ToolTip="Pinned on top of other windows" Visibility="Collapsed" />
+                    <Border CornerRadius="9" Padding="1" BorderThickness="1"
+                            BorderBrush="{DynamicResource PanelBorderBrush}">
+                        <StackPanel Orientation="Horizontal">
+                            <RadioButton x:Name="StopwatchTab" GroupName="Mode" Content="STOPWATCH" IsChecked="True"
+                                         Style="{StaticResource ModeTab}" Checked="ModeTab_Checked"
+                                         ToolTip="Stopwatch" />
+                            <RadioButton x:Name="TimerTab" GroupName="Mode" Content="TIMER"
+                                         Style="{StaticResource ModeTab}" Checked="ModeTab_Checked"
+                                         ToolTip="Countdown timer with alarm" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
             </Grid>
 
             <!-- ===== LCD screen ===== -->
-            <Border Grid.Row="2" Margin="9,3,9,7" CornerRadius="6" BorderThickness="2"
+            <Border x:Name="LcdBorder" Grid.Row="2" Margin="9,3,9,7" CornerRadius="6" BorderThickness="2"
                     Background="{DynamicResource LcdBackgroundBrush}"
                     BorderBrush="{DynamicResource LcdBorderBrush}"
                     Padding="8,5,8,4"
@@ -116,16 +128,32 @@
                                        Foreground="{DynamicResource LcdDigitBrush}" />
                         </Grid>
 
-                        <!-- Main stopwatch digits -->
-                        <controls:SevenSegmentDisplay x:Name="MainDisplay" DigitHeight="58" Text="00:00:00.00"
-                                                      HorizontalAlignment="Center"
-                                                      OnBrush="{DynamicResource LcdDigitBrush}"
-                                                      OffBrush="{DynamicResource LcdGhostBrush}" />
+                        <!-- Shown instead of the clock row while the alarm rings -->
+                        <TextBlock x:Name="TimesUpText" Text="TIME'S UP!" HorizontalAlignment="Center"
+                                   Margin="0,0,0,4" Visibility="Collapsed"
+                                   FontFamily="{StaticResource UiFont}" FontSize="22" FontWeight="Black"
+                                   Foreground="{DynamicResource LcdDigitBrush}" />
+
+                        <Grid>
+                            <!-- Main stopwatch digits -->
+                            <controls:SevenSegmentDisplay x:Name="MainDisplay" DigitHeight="58" Text="00:00:00.00"
+                                                          HorizontalAlignment="Center"
+                                                          OnBrush="{DynamicResource LcdDigitBrush}"
+                                                          OffBrush="{DynamicResource LcdGhostBrush}" />
+                            <!-- Countdown timer digits -->
+                            <controls:SevenSegmentDisplay x:Name="TimerDisplay" DigitHeight="58" Text="00:05:00"
+                                                          HorizontalAlignment="Center" Visibility="Collapsed"
+                                                          OnBrush="{DynamicResource LcdDigitBrush}"
+                                                          OffBrush="{DynamicResource LcdGhostBrush}" />
+                        </Grid>
 
                         <!-- Mode / status labels -->
                         <Grid Margin="0,5,0,0">
-                            <TextBlock Text="STOPWATCH" FontFamily="{StaticResource UiFont}" FontSize="9"
+                            <TextBlock x:Name="ModeText" Text="STOPWATCH" FontFamily="{StaticResource UiFont}" FontSize="9"
                                        FontWeight="Bold" Foreground="{DynamicResource LcdLabelBrush}" />
+                            <TextBlock x:Name="OtherModeText" HorizontalAlignment="Center"
+                                       FontFamily="{StaticResource UiFont}" FontSize="9" FontWeight="Bold"
+                                       Foreground="{DynamicResource LcdLabelBrush}" />
                             <TextBlock x:Name="StatusText" Text="READY" HorizontalAlignment="Right"
                                        FontFamily="{StaticResource UiFont}" FontSize="9" FontWeight="Bold"
                                        Foreground="{DynamicResource LcdLabelBrush}" />
@@ -134,8 +162,8 @@
                 </Viewbox>
             </Border>
 
-            <!-- ===== START / PAUSE / RESET ===== -->
-            <Grid Grid.Row="3" Margin="6,0,6,8">
+            <!-- ===== Stopwatch: START / PAUSE / RESET ===== -->
+            <Grid x:Name="StopwatchButtons" Grid.Row="3" Margin="6,0,6,8">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
@@ -149,6 +177,35 @@
                 <Button x:Name="ResetButton" Grid.Column="2" Margin="3,0" Height="28" Content="RESET"
                         Style="{StaticResource WatchButton}" Foreground="{DynamicResource DangerBrush}"
                         Click="ResetButton_Click" ToolTip="Reset to zero" />
+            </Grid>
+
+            <!-- ===== Timer: SET / START-PAUSE-RESUME / RESET ===== -->
+            <Grid x:Name="TimerButtons" Grid.Row="3" Margin="6,0,6,8" Visibility="Collapsed">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button x:Name="SetTimerButton" Grid.Column="0" Margin="3,0" Height="28" Content="SET"
+                        Style="{StaticResource WatchButton}" Click="SetTimerButton_Click" ToolTip="Set timer duration" />
+                <Button x:Name="TimerStartButton" Grid.Column="1" Margin="3,0" Height="28" Content="START"
+                        Style="{StaticResource WatchButton}" Foreground="{DynamicResource AccentBrush}"
+                        Click="TimerStartButton_Click" ToolTip="Start timer" />
+                <Button x:Name="TimerResetButton" Grid.Column="2" Margin="3,0" Height="28" Content="RESET"
+                        Style="{StaticResource WatchButton}" Foreground="{DynamicResource DangerBrush}"
+                        Click="TimerResetButton_Click" ToolTip="Reset timer" />
+            </Grid>
+
+            <!-- ===== Alarm ringing ===== -->
+            <Grid x:Name="AlarmButtons" Grid.Row="3" Margin="9,0,9,8" Visibility="Collapsed">
+                <Button x:Name="StopAlarmButton" Height="28" Style="{StaticResource WatchButton}"
+                        Foreground="{DynamicResource DangerBrush}" Click="StopAlarmButton_Click" ToolTip="Stop the alarm">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xEA8F;" FontFamily="{StaticResource IconFont}" FontSize="12"
+                                   VerticalAlignment="Center" Margin="0,1,7,0" />
+                        <TextBlock Text="STOP ALARM" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
             </Grid>
         </Grid>
     </Border>

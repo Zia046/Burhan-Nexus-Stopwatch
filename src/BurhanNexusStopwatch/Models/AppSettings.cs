@@ -9,6 +9,12 @@ public enum DisplayPrecision
     Milliseconds
 }
 
+public enum AppMode
+{
+    Stopwatch,
+    Timer
+}
+
 public enum AppTheme
 {
     ClassicLcd,
@@ -28,6 +34,10 @@ public sealed class AppSettings
     public bool RememberPosition { get; set; } = true;
     public bool RememberSize { get; set; } = true;
     public bool StartWithWindows { get; set; }
+
+    // Countdown timer
+    public AppMode LastMode { get; set; } = AppMode.Stopwatch;
+    public int TimerSeconds { get; set; } = 300; // last duration the user set
 
     // Last window bounds (device-independent units). Null = never saved.
     public double? WindowLeft { get; set; }
