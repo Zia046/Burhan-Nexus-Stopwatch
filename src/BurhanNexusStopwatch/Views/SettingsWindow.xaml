@@ -1,0 +1,97 @@
+<Window x:Class="BurhanNexusStopwatch.Views.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Settings - Burhan Nexus Stopwatch"
+        Width="310" SizeToContent="Height"
+        WindowStyle="SingleBorderWindow" ResizeMode="NoResize"
+        ShowInTaskbar="False" WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource PanelBackgroundBrush}"
+        UseLayoutRounding="True">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="32" ResizeBorderThickness="0" GlassFrameThickness="0"
+                      CornerRadius="0" UseAeroCaptionButtons="False" />
+    </WindowChrome.WindowChrome>
+
+    <Border BorderBrush="{DynamicResource CaseBorderBrush}" BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- Title bar -->
+            <Grid Background="{DynamicResource CaseBrush}">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0,0,0">
+                    <TextBlock Text="&#xE713;" FontFamily="{StaticResource IconFont}" FontSize="12"
+                               Foreground="{DynamicResource AccentBrush}" VerticalAlignment="Center" Margin="0,1,8,0" />
+                    <TextBlock Text="Settings" FontFamily="{StaticResource UiFont}" FontSize="12.5" FontWeight="SemiBold"
+                               Foreground="{DynamicResource TitleForegroundBrush}" VerticalAlignment="Center" />
+                </StackPanel>
+                <Button Style="{StaticResource CloseButton}" Content="&#xE8BB;" HorizontalAlignment="Right"
+                        Width="40" Click="Cancel_Click"
+                        WindowChrome.IsHitTestVisibleInChrome="True" ToolTip="Close" />
+            </Grid>
+
+            <ScrollViewer x:Name="Scroller" Grid.Row="1" VerticalScrollBarVisibility="Auto" Focusable="False">
+                <StackPanel Margin="16,6,16,10">
+
+                    <TextBlock Text="WINDOW" Style="{StaticResource SectionLabel}" />
+                    <CheckBox x:Name="PinCheck" Style="{StaticResource ToggleSwitch}">
+                        <StackPanel>
+                            <TextBlock Text="Pin to Screen (Always on Top)" />
+                            <TextBlock Text="Stay above all other windows" FontSize="10.5"
+                                       Foreground="{DynamicResource SubtleForegroundBrush}" />
+                        </StackPanel>
+                    </CheckBox>
+
+                    <TextBlock Text="CLOCK" Style="{StaticResource SectionLabel}" />
+                    <Border Style="{StaticResource SegmentPanel}">
+                        <StackPanel Orientation="Horizontal">
+                            <RadioButton x:Name="Clock12Radio" GroupName="ClockFormat" Content="12-hour" Style="{StaticResource SegmentButton}" />
+                            <RadioButton x:Name="Clock24Radio" GroupName="ClockFormat" Content="24-hour" Style="{StaticResource SegmentButton}" />
+                        </StackPanel>
+                    </Border>
+                    <CheckBox x:Name="ShowClockCheck" Content="Show clock" Style="{StaticResource ToggleSwitch}" />
+                    <CheckBox x:Name="ShowDateCheck" Content="Show date and day" Style="{StaticResource ToggleSwitch}" />
+
+                    <TextBlock Text="STOPWATCH DISPLAY PRECISION" Style="{StaticResource SectionLabel}" />
+                    <Border Style="{StaticResource SegmentPanel}">
+                        <StackPanel Orientation="Horizontal">
+                            <RadioButton x:Name="PrecSecondsRadio" GroupName="Precision" Content="Sec" Style="{StaticResource SegmentButton}" ToolTip="HH:MM:SS" />
+                            <RadioButton x:Name="PrecTenthsRadio" GroupName="Precision" Content="1/10" Style="{StaticResource SegmentButton}" ToolTip="HH:MM:SS.S" />
+                            <RadioButton x:Name="PrecHundredthsRadio" GroupName="Precision" Content="1/100" Style="{StaticResource SegmentButton}" ToolTip="HH:MM:SS.CC" />
+                            <RadioButton x:Name="PrecMillisRadio" GroupName="Precision" Content="1/1000" Style="{StaticResource SegmentButton}" ToolTip="HH:MM:SS.MMM" />
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Text="THEME" Style="{StaticResource SectionLabel}" />
+                    <Border Style="{StaticResource SegmentPanel}">
+                        <StackPanel Orientation="Horizontal">
+                            <RadioButton x:Name="ThemeClassicRadio" GroupName="Theme" Content="Classic LCD" Style="{StaticResource SegmentButton}" />
+                            <RadioButton x:Name="ThemeDarkRadio" GroupName="Theme" Content="Dark" Style="{StaticResource SegmentButton}" />
+                            <RadioButton x:Name="ThemeLightRadio" GroupName="Theme" Content="Light" Style="{StaticResource SegmentButton}" />
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Text="STARTUP &amp; MEMORY" Style="{StaticResource SectionLabel}" />
+                    <CheckBox x:Name="RememberPositionCheck" Content="Remember window position" Style="{StaticResource ToggleSwitch}" />
+                    <CheckBox x:Name="RememberSizeCheck" Content="Remember window size" Style="{StaticResource ToggleSwitch}" />
+                    <CheckBox x:Name="StartWithWindowsCheck" Content="Start with Windows" Style="{StaticResource ToggleSwitch}" />
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Footer -->
+            <Border Grid.Row="2" Background="{DynamicResource CaseBrush}" Padding="12,10">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="CANCEL" Width="84" Height="28" Margin="0,0,8,0" IsCancel="True"
+                            Style="{StaticResource WatchButton}" />
+                    <Button Content="SAVE" Width="84" Height="28" IsDefault="True"
+                            Style="{StaticResource WatchButton}" Foreground="{DynamicResource AccentBrush}"
+                            Click="Save_Click" />
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

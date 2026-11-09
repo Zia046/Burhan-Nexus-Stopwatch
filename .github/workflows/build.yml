@@ -1,0 +1,55 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Publish self-contained single-file exe (win-x64)
+        run: >
+          dotnet publish src/BurhanNexusStopwatch/BurhanNexusStopwatch.csproj
+          -c Release -r win-x64 --self-contained true
+          -p:PublishSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:EnableCompressionInSingleFile=true
+          -p:DebugType=none
+          -o publish/win-x64
+
+      - name: Package
+        shell: pwsh
+        run: |
+          Copy-Item README.md publish/win-x64/
+          Compress-Archive -Path publish/win-x64/* -DestinationPath BurhanNexusStopwatch-win-x64.zip -Force
+          Get-ChildItem publish/win-x64 | Format-Table Name, Length
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BurhanNexusStopwatch-win-x64
+          path: publish/win-x64/
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Burhan Nexus Stopwatch ${{ github.ref_name }}
+          files: BurhanNexusStopwatch-win-x64.zip
+          body: |
+            **Burhan Nexus Stopwatch** for Windows 10 / 11 (64-bit).
+
+            Download `BurhanNexusStopwatch-win-x64.zip`, extract it, and run `BurhanNexusStopwatch.exe`.
+            No .NET installation needed.

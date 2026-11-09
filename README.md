@@ -42,10 +42,47 @@ A miniature digital stopwatch inspired by the timeless design of classic Casio w
 
 ## 🚀 Installation
 
-1. Download the latest release.
+1. Download the latest ZIP from the [Releases](../../releases) page.
 2. Extract the application files if provided in a ZIP archive.
 3. Run `BurhanNexusStopwatch.exe`.
 4. Enjoy your stopwatch!
+
+---
+
+## 🛠️ Build from Source
+
+**Requirements:** Windows 10/11 and the [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) (or Visual Studio 2022 with the ".NET desktop development" workload).
+
+Open `BurhanNexusStopwatch.sln` in Visual Studio and press **F5**, or from a terminal:
+
+```powershell
+# Run in debug mode
+dotnet run --project src/BurhanNexusStopwatch
+
+# Build the standalone Release exe (no .NET install needed on the target PC)
+dotnet publish src/BurhanNexusStopwatch -c Release -r win-x64 --self-contained true `
+  -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true `
+  -p:EnableCompressionInSingleFile=true -o publish
+```
+
+The finished app is `publish\BurhanNexusStopwatch.exe`.
+
+Every push is also built automatically by GitHub Actions (see the **Actions** tab), and tags like `v1.0.0` publish a ready-to-download ZIP on the **Releases** page.
+
+### Project layout
+
+```
+src/BurhanNexusStopwatch/
+├── Controls/SevenSegmentDisplay.cs   # Casio-style LCD digits (vector, no font file)
+├── Services/StopwatchEngine.cs       # Timing via System.Diagnostics.Stopwatch
+├── Services/SettingsService.cs       # Settings saved to %AppData%\BurhanNexus\Stopwatch
+├── Services/StartupService.cs        # "Start with Windows"
+├── Services/NativeMethods.cs         # Native always-on-top (HWND_TOPMOST)
+├── Themes/                           # Classic LCD, Dark, Light + shared styles
+├── Views/                            # Settings and About dialogs
+├── Models/AppInfo.cs                 # ← Edit your mobile number and email here
+└── MainWindow.xaml                   # Main stopwatch window
+```
 
 ---
 
