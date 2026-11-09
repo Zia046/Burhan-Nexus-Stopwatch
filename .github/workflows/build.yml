@@ -37,10 +37,28 @@ jobs:
           Compress-Archive -Path publish/win-x64/* -DestinationPath BurhanNexusStopwatch-win-x64.zip -Force
           Get-ChildItem publish/win-x64 | Format-Table Name, Length
 
+      - name: Build installer (Inno Setup)
+        shell: pwsh
+        run: |
+          [xml]$proj = Get-Content src/BurhanNexusStopwatch/BurhanNexusStopwatch.csproj
+          $v = ($proj.Project.PropertyGroup | Where-Object { $_.Version } | Select-Object -First 1).Version
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          if (-not (Test-Path $iscc)) {
+            choco install innosetup -y --no-progress
+          }
+          & $iscc "/DMyAppVersion=$v" "/DPublishDir=..\publish\win-x64" installer\BurhanNexusStopwatch.iss
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Get-ChildItem installer-output | Format-Table Name, Length
+
       - uses: actions/upload-artifact@v4
         with:
           name: BurhanNexusStopwatch-win-x64
           path: publish/win-x64/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BurhanNexusStopwatch-Setup
+          path: installer-output/*.exe
 
       - name: Read app version
         id: version
@@ -58,9 +76,14 @@ jobs:
           tag_name: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || steps.version.outputs.tag }}
           target_commitish: ${{ github.sha }}
           name: Burhan Nexus Stopwatch ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || steps.version.outputs.tag }}
-          files: BurhanNexusStopwatch-win-x64.zip
+          files: |
+            installer-output/*.exe
+            BurhanNexusStopwatch-win-x64.zip
           body: |
-            **Burhan Nexus Stopwatch** for Windows 10 / 11 (64-bit).
+            **Burhan Nexus Stopwatch** for Windows 10 / 11 (64-bit). No .NET installation needed.
 
-            Download `BurhanNexusStopwatch-win-x64.zip`, extract it, and run `BurhanNexusStopwatch.exe`.
-            No .NET installation needed.
+            **Recommended:** download `BurhanNexusStopwatch-Setup-x.y.z.exe` and run it.
+            It installs the app, adds a Desktop and Start Menu shortcut, and registers an uninstaller
+            (Settings > Apps).
+
+            **Portable:** download `BurhanNexusStopwatch-win-x64.zip`, extract it, and run `BurhanNexusStopwatch.exe`.

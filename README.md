@@ -42,10 +42,14 @@ A miniature digital stopwatch inspired by the timeless design of classic Casio w
 
 ## 🚀 Installation
 
-1. Download the latest ZIP from the [Releases](../../releases) page.
-2. Extract the application files if provided in a ZIP archive.
-3. Run `BurhanNexusStopwatch.exe`.
-4. Enjoy your stopwatch!
+1. Download **`BurhanNexusStopwatch-Setup-1.0.0.exe`** from the [Releases](../../releases) page.
+2. Run the installer and follow the steps.
+3. The installer adds a **Desktop shortcut** and a **Start Menu** entry, then launches the app.
+4. To remove it later: **Settings → Apps → Burhan Nexus Stopwatch → Uninstall**.
+
+> Prefer no installation? Download the portable `BurhanNexusStopwatch-win-x64.zip`, extract it, and run `BurhanNexusStopwatch.exe`.
+>
+> Windows may show *"Windows protected your PC"* because the installer is not yet code-signed. Click **More info → Run anyway**.
 
 ---
 
